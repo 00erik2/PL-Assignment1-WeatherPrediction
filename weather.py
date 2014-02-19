@@ -12,6 +12,67 @@ import sys
 
 # functions go here
 
+# Calculates the minimum distance classifier for a set of data
+def calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , XY ):
+    ''' This function takes the lists made from the file and finds all of the
+    weather defined by X and Y and calculates the Minimum Distance Classifier
+    for each of the list and returns them in the form:
+    ( TempMean , HumiMean , WindMean , RainMean , UVMean )
+    '''
+    # create the lists that I will need
+    Temp = []
+    Humi = []
+    Wind = []
+    Rain = []
+    UV = []
+    
+    # find each of the X-Y weathers in the main lists and put the corisponding 
+    #    elements into the new list to be processed
+    i = 0
+    for type in WeatherList:
+        
+        # Check if the Weather at this point is the one we are looking for
+        if WeatherList[int(i)] == XY:
+            
+            # if it is we need to put all of the assosiated data in our new
+            #     lists
+            Temp.append( TempList[i] )
+            Humi.append( HumiList[i] )
+            Wind.append( WindList[i] )
+            Rain.append( RainList[i] )
+            UV.append( UVList[i] )
+        i += 1
+    
+    # We now have all of the needed values
+    # Compute the Mean of each value and return them
+    
+    TempSum = 0
+    HumiSum = 0
+    WindSum = 0
+    RainSum = 0
+    UVSum = 0
+    
+    for i in Temp:
+        TempSum += float(i)
+    for i in Humi:
+        HumiSum += float(i)
+    for i in Wind:
+        WindSum += float(i)
+    for i in Rain:
+        RainSum += float(i)
+    for i in UV:
+        UVSum += float(i)
+    
+    # return the mean Values
+    try:
+        results = ( TempSum / len(Temp) , HumiSum / len(Humi) , WindSum / len(Wind) , RainSum / len(Rain) , UVSum / len(UV) )
+    except ZeroDivisionError:
+        # There were non of the XY specified in the data, we will just return a
+        #    single 0 for this
+        return 0
+    else:
+        return results
+
 
 # attempts to open a file for input and exits the program if unable to
 def openfile( filename ):
@@ -80,11 +141,50 @@ def runPrediction( trainFile , testFile ):
             while elements[i] == '':
                 i += 1
             WeatherList.append( elements[i] )
-            
-        
-            
     
+    # remove the "\n" at the end of each of the weathers
+    '''for i in WeatherList:
+        WeatherList[i].rstrip(WeatherList[i][-3:])'''
     
+    # we now find the means for each of the weather pattern
+    # Hot
+    HotSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-sunny\n' )
+    HotWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , "hot-windy\n" )
+    HotOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-overcast\n' )
+    HotRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-rainy\n' )
+    HotHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-humid\n' )
+    # Mild
+    MildSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-sunny\n' )
+    MildWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-windy\n' )
+    MildOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-overcast\n' )
+    MildRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-rainy\n' )
+    MildHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-humid\n' )
+    # Cold
+    ColdSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-sunny\n' )
+    ColdWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-windy\n' )
+    ColdOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-overcast\n' )
+    ColdRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-rainy\n' )
+    ColdHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-humid\n' )
+    
+    #debug
+    print( HotSunnyValues )
+    print( HotWindyValues )
+    print( HotOvercastValues )
+    print( HotRainyValues )
+    print( HotHumidValues )
+    print( MildSunnyValues )
+    print( MildWindyValues )
+    print( MildOvercastValues )
+    print( MildRainyValues )
+    print( MildHumidValues )
+    
+    print( ColdSunnyValues )
+    print( ColdWindyValues )
+    print( ColdOvercastValues )
+    print( ColdRainyValues )
+    print( ColdHumidValues )
+
+
 
 
 # allows to run the module as a program
@@ -102,9 +202,8 @@ if __name__ == '__main__':
         trainingFile = openfile( trainingFileName )
         testingFile = openfile( testingFileName )
         
+        # run the prediction function on the 2 files
         runPrediction( trainingFile , testingFile )
-        
-        
         
         # closing the file
         trainingFile.close()
