@@ -28,6 +28,13 @@ def openfile( filename ):
 # then compairs the predictions to the test file and prints out the results
 def runPrediction( trainFile , testFile ):
     
+    TempList = []
+    HumiList = []
+    WindList = []
+    RainList = []
+    UVList = []
+    WeatherList = []
+    
     # get the input from the training File
     # for each of the lines of the file
     for line in trainFile:
@@ -40,48 +47,42 @@ def runPrediction( trainFile , testFile ):
         # Skip over the first line of the file
         if elements[0] != "Date":
             
+            
             # 1st string will be the date, we can skip this
             # 2nd string we want is the Temp we need to incrament passed the
             #     empty strings to get to it
             i = 1
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            TempList.append( line[i] )
+            TempList.append( elements[i] )
             i += 1
             # 3rd string we want is the Humidity
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            HumiList.append( line[i] )
+            HumiList.append( elements[i] )
             i += 1
             # 4th string we want is the Wind
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            WindList.append( line[i] )
+            WindList.append( elements[i] )
             i += 1
             # 5th string we want is the Rain
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            RainList.append( line[i] )
+            RainList.append( elements[i] )
             i += 1
             # 6th string we want is the UV index
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            UVList.append( line[i] )
+            UVList.append( elements[i] )
             i += 1
             # last string we want is the weather desciption
-            while line[i] == '':
+            while elements[i] == '':
                 i += 1
-            WeatherList.append( line[i] )
-            
-        #debug
-        print( "Temp: ", TempList[0] )
-        print( "Humidity: ", HumiList[0] )
-        print( "Wind: ", WindList[0] )
-        print( "Rain: ", RainList[0] )
-        print( "UV: ", UVList[0] )
-        print( "Weather: ", WeatherList[0] )
+            WeatherList.append( elements[i] )
             
         
+            
     
     
 
