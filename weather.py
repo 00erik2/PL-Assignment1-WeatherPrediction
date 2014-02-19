@@ -9,6 +9,7 @@
 #   percent.
 
 import sys
+import math
 
 # functions go here
 
@@ -17,7 +18,8 @@ def calculateMeans( TempList , HumiList , WindList , RainList , UVList , Weather
     ''' This function takes the lists made from the file and finds all of the
     weather defined by X and Y and calculates the Minimum Distance Classifier
     for each of the list and returns them in the form:
-    ( TempMean , HumiMean , WindMean , RainMean , UVMean )
+    ( TempMean , HumiMean , WindMean , RainMean , UVMean , TempNorm , HumiNorm,
+    WindNorm, RainNorm, UVNorm )
     '''
     # create the lists that I will need
     Temp = []
@@ -65,13 +67,38 @@ def calculateMeans( TempList , HumiList , WindList , RainList , UVList , Weather
     
     # return the mean Values
     try:
-        results = ( TempSum / len(Temp) , HumiSum / len(Humi) , WindSum / len(Wind) , RainSum / len(Rain) , UVSum / len(UV) )
+        Means = [ TempSum / len(Temp) , HumiSum / len(Humi) , WindSum / len(Wind) , RainSum / len(Rain) , UVSum / len(UV) ]
     except ZeroDivisionError:
         # There were non of the XY specified in the data, we will just return a
         #    single 0 for this
         return 0
     else:
-        return results
+        
+        print(min(Temp) , max(Temp))
+        
+        # Calculate Norms. if statment indicates one value in set
+        if float(max(Temp)) - float(min(Temp)) != 0:
+            Means.append( (float(TempSum) - float(min(Temp)) ) / ( float(max(Temp)) - float(min(Temp)) ) )
+        else:
+            Means.append( 0 )
+        if float(max(Humi)) - float(min(Humi)) != 0:
+            Means.append( (float(HumiSum) - float(min(Humi)) ) / ( float(max(Humi)) - float(min(Humi)) ) )
+        else:
+            Means.append( 0 )
+        if float(max(Wind)) - float(min(Wind)) != 0:
+            Means.append( (float(WindSum) - float(min(Wind)) ) / ( float(max(Wind)) - float(min(Wind)) ) )
+        else:
+            Means.append( 0 )
+        if float(max(Rain)) - float(min(Rain)) != 0:
+            Means.append( (float(RainSum) - float(min(Rain)) ) / ( float(max(Rain)) - float(min(Rain)) ) )
+        else:
+            Means.append( 0 )
+        if float(max(UV)) - float(min(UV)) != 0:
+            Means.append( (float(UVSum) - float(min(UV)) ) / ( float(max(UV)) - float(min(UV)) ) )
+        else:
+            Means.append( 0 )
+        
+        return Means
 
 
 # attempts to open a file for input and exits the program if unable to
@@ -141,50 +168,146 @@ def runPrediction( trainFile , testFile ):
             while elements[i] == '':
                 i += 1
             WeatherList.append( elements[i] )
+            
+    for i in WeatherList:
+        i.replace( '\n' , '' )
+        
+    print( WeatherList )
     
-    # remove the "\n" at the end of each of the weathers
-    '''for i in WeatherList:
-        WeatherList[i].rstrip(WeatherList[i][-3:])'''
     
     # we now find the means for each of the weather pattern
     # Hot
-    HotSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-sunny\n' )
-    HotWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , "hot-windy\n" )
-    HotOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-overcast\n' )
-    HotRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-rainy\n' )
-    HotHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-humid\n' )
+    HotSunnyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-sunny\n' )
+    HotWindyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-windy\n' )
+    HotOvercastMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-overcast\n' )
+    HotRainyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-rainy\n' )
+    HotHumidMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-humid\n' )
     # Mild
-    MildSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-sunny\n' )
-    MildWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-windy\n' )
-    MildOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-overcast\n' )
-    MildRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-rainy\n' )
-    MildHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-humid\n' )
+    MildSunnyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-sunny\n' )
+    MildWindyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-windy\n' )
+    MildOvercastMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-overcast\n' )
+    MildRainyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-rainy\n' )
+    MildHumidMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'mild-humid\n' )
     # Cold
-    ColdSunnyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-sunny\n' )
-    ColdWindyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-windy\n' )
-    ColdOvercastValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-overcast\n' )
-    ColdRainyValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-rainy\n' )
-    ColdHumidValues = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-humid\n' )
+    ColdSunnyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-sunny\n' )
+    ColdWindyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-windy\n' )
+    ColdOvercastMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-overcast\n' )
+    ColdRainyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-rainy\n' )
+    ColdHumidMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-humid\n' )
     
-    #debug
-    print( HotSunnyValues )
-    print( HotWindyValues )
-    print( HotOvercastValues )
-    print( HotRainyValues )
-    print( HotHumidValues )
-    print( MildSunnyValues )
-    print( MildWindyValues )
-    print( MildOvercastValues )
-    print( MildRainyValues )
-    print( MildHumidValues )
+    print( ColdWindyMeans )
     
-    print( ColdSunnyValues )
-    print( ColdWindyValues )
-    print( ColdOvercastValues )
-    print( ColdRainyValues )
-    print( ColdHumidValues )
+    
+    #Print out the Class Centroids
+    print( "Class Centroids(not normalized" )
+    print( "Weather\t\tTemp\tHumi\tWind\tRain\tUV" )
+    # Hot
+    if HotSunnyMeans != 0:
+        print( "hot-sunny\t", HotSunnyMeans[0], HotSunnyMeans[1], HotSunnyMeans[2], HotSunnyMeans[3], HotSunnyMeans[4], sep='\t' )
+    if HotWindyMeans != 0:
+        print( "hot-windy\t", HotWindyMeans[0], HotWindyMeans[1], HotWindyMeans[2], HotWindyMeans[3], HotWindyMeans[4], sep='\t' )
+    if HotOvercastMeans != 0:
+        print( "hot-overcast\t", HotOvercastMeans[0], HotOvercastMeans[1], HotOvercastMeans[2], HotOvercastMeans[3], HotOvercastMeans[4], sep='\t' )
+    if HotRainyMeans != 0:
+        print( "hot-rainy\t", HotRainyMeans[0], HotRainyMeans[1], HotRainyMeans[2], HotRainyMeans[3], HotRainyMeans[4], sep='\t' )
+    if HotSunnyMeans != 0:
+        print( "hot-humid\t", HotHumidMeans[0], HotHumidMeans[1], HotHumidMeans[2], HotHumidMeans[3], HotHumidMeans[4], sep='\t' )
+    # Mild
+    if MildSunnyMeans != 0:
+        print( "mild-sunny\t", MildSunnyMeans[0], MildSunnyMeans[1], MildSunnyMeans[2], MildSunnyMeans[3], MildSunnyMeans[4], sep='\t' )
+    if MildWindyMeans != 0:
+        print( "mild-windy\t", MildWindyMeans[0], MildWindyMeans[1], MildWindyMeans[2], MildWindyMeans[3], MildWindyMeans[4], sep='\t' )
+    if MildOvercastMeans != 0:
+        print( "mild-overcast\t", MildOvercastMeans[0], MildOvercastMeans[1], MildOvercastMeans[2], MildOvercastMeans[3], MildOvercastMeans[4], sep='\t' )
+    if MildRainyMeans != 0:
+        print( "mild-rainy\t", MildRainyMeans[0], MildRainyMeans[1], MildRainyMeans[2], MildRainyMeans[3], MildRainyMeans[4], sep='\t' )
+    if MildHumidMeans != 0:
+        print( "mild-humid\t", MildHumidMeans[0], MildHumidMeans[1], MildHumidMeans[2], MildHumidMeans[3], MildHumidMeans[4], sep='\t' )
+    # Cold
+    if ColdSunnyMeans != 0:
+        print( "cold-sunny\t", ColdSunnyMeans[0], ColdSunnyMeans[1], ColdSunnyMeans[2], ColdSunnyMeans[3], ColdSunnyMeans[4], sep='\t' )
+    if ColdWindyMeans != 0:
+        print( "cold-windy\t", ColdWindyMeans[0], ColdWindyMeans[1], ColdWindyMeans[2], ColdWindyMeans[3], ColdWindyMeans[4], sep='\t' )
+    if ColdOvercastMeans != 0:
+        print( "cold-overcast\t", ColdOvercastMeans[0], ColdOvercastMeans[1], ColdOvercastMeans[2], ColdOvercastMeans[3], ColdOvercastMeans[4] , sep='\t' )
+    if ColdRainyMeans != 0:
+        print( "cold-rainy\t", ColdRainyMeans[0], ColdRainyMeans[1], ColdRainyMeans[2], ColdRainyMeans[3], ColdRainyMeans[4], sep='\t' )
+    if ColdHumidMeans != 0:
+        print( "cold-humid\t", ColdHumidMeans[0], ColdHumidMeans[1], ColdHumidMeans[2], ColdHumidMeans[3], ColdHumidMeans[4], sep='\t' )
+        
+    print( '\n' )
 
+    
+    Total = 0
+    Right = 0
+    TestDate = []
+    TestTemp = []
+    TestHumi = []
+    TestWind = []
+    TestRain = []
+    TestUV = []
+    TestWeather = []
+    
+    j = 0
 
+    # Read in each line of the test file and run the prediction on it
+    for line in testFile:
+        
+        # separate the string to make it easier to parse, this will split based
+        # on spaces and we will have empty strings that will need to be parced
+        # out later
+        elements = line.split( " " )
+        
+        
+        
+        if elements[0] != "Date":
+            i = 0
+            # 1st string will be the date,
+            while elements[i] == '':
+                i += 1
+            TestDate[j] = elements[i]
+            i += 1            
+            # 2nd string we want is the Temp
+            while elements[i] == '':
+                i += 1
+            TestTemp[j] = elements[i]
+            i += 1
+            # 3rd string we want is the Humidity
+            while elements[i] == '':
+                i += 1
+            TestHumi[j] = elements[i]
+            i += 1
+            # 4th string we want is the Wind
+            while elements[i] == '':
+                i += 1
+            TestWind[j] = elements[i]
+            i += 1
+            # 5th string we want is the Rain
+            while elements[i] == '':
+                i += 1
+            TestRain[j] = elements[i]
+            i += 1
+            # 6th string we want is the UV index
+            while elements[i] == '':
+                i += 1
+            TestUV[j] = elements[i]
+            i += 1
+            # last string we want is the weather desciption
+            while elements[i] == '':
+                i += 1
+            TestWeather[j] = elements[i].rstrip(elements[-1:])
+            Total += 1
+        else:
+            # first line printout
+            print( line , "\t\tPredicted" )
+        j += 1
+        
+    
+
+    
+
+    
+    
 
 
 # allows to run the module as a program
