@@ -1,17 +1,19 @@
 # weather.py
 # Author: Erik Hattervig
 # Weather Prediction Program for SDSMT CSC 461 Programming Languages Spring 2014 Class
+# Due Date: 2/19/14
 #
 # Decription: The perpose of this program is to take a set of weather data
-#   povided by the user and calculate the minimum distance classifier for the
-#   set and predict the weather for a different set of data. The program will
-#   then check the results of that data and calculate how accurate it was as a
-#   percent.
+#   povided by the user and calculate the minimum distance classifier from a 
+#   normalized set of data for the set and predict the weather for a different 
+#   set of data. The program will then check the results of that data and 
+#   calculate how accurate it was as a percent.
+#
+# Run Instructions: python weather.py <trainningfile> <testingfile>
+#
 
 import sys
 import math
-
-# functions go here
 
 # Calculates the minimum distance classifier for a set of data
 def calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , XY ):
@@ -74,28 +76,11 @@ def calculateMeans( TempList , HumiList , WindList , RainList , UVList , Weather
         return 0
     else:
         # Calculate Norms. if statment indicates one value in set
-        if float(max(Temp)) - float(min(Temp)) != 0:
-            Means.append( (float(Means[0]) - float(min(Temp)) ) / ( float(max(Temp)) - float(min(Temp)) ) )
-        else:
-            Means.append( 0 )
-        if float(max(Humi)) - float(min(Humi)) != 0:
-            Means.append( (float(Means[1]) - float(min(Humi)) ) / ( float(max(Humi)) - float(min(Humi)) ) )
-        else:
-            Means.append( 0 )
-        if float(max(Wind)) - float(min(Wind)) != 0:
-            Means.append( (float(Means[2]) - float(min(Wind)) ) / ( float(max(Wind)) - float(min(Wind)) ) )
-        else:
-            Means.append( 0 )
-        if float(max(Rain)) - float(min(Rain)) != 0:
-            Means.append( (float(Means[3]) - float(min(Rain)) ) / ( float(max(Rain)) - float(min(Rain)) ) )
-        else:
-            Means.append( 0 )
-        if float(max(UV)) - float(min(UV)) != 0:
-            Means.append( (float(Means[4]) - float(min(UV)) ) / ( float(max(UV)) - float(min(UV)) ) )
-        else:
-            Means.append( 0 )
-        
-        
+        Means.append( (float(Means[0]) - float(min(TempList)) ) / ( float(max(TempList)) - float(min(TempList)) ) )
+        Means.append( (float(Means[1]) - float(min(HumiList)) ) / ( float(max(HumiList)) - float(min(HumiList)) ) )
+        Means.append( (float(Means[2]) - float(min(WindList)) ) / ( float(max(WindList)) - float(min(WindList)) ) )
+        Means.append( (float(Means[3]) - float(min(RainList)) ) / ( float(max(RainList)) - float(min(RainList)) ) )
+        Means.append( (float(Means[4]) - float(min(UVList)) ) / ( float(max(UVList)) - float(min(UVList)) ) )
         return Means
 
 
@@ -379,19 +364,16 @@ def runPrediction( trainFile , testFile ):
         
         # We have the prediction, print out the info and check if we are right
         print('{0:15} {1:15} {2:15} {3:15} {4:15} {5:15} {6:20} {7:20}'.format( TestData[0][i] , TestData[1][i] , TestData[2][i] , TestData[3][i] , TestData[4][i] , TestData[5][i] , TestWeather[i][:-1] , bestMatch[:-1] ) )
-        if bestMatch == TestWeather:
+        
+        if bestMatch == WeatherIncr:
             Right += 1
         # incramenter
         i += 1
         
     # print out results
-    print( "weaterPredictions: ", ( Right / Total ) * 100 , "% correct", sep='')
-    
-
+    print( 'weaterPredictions: {0:2.1f}% correct'.format(( Right / Total ) * 100 ))
     
     
-
-
 # allows to run the module as a program
 # gets the filenames from the command line, then has them opened and sends the
 #   files to a function that takes care of the comutations. Then closes the
