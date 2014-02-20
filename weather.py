@@ -73,30 +73,28 @@ def calculateMeans( TempList , HumiList , WindList , RainList , UVList , Weather
         #    single 0 for this
         return 0
     else:
-        
-        print(min(Temp) , max(Temp))
-        
         # Calculate Norms. if statment indicates one value in set
         if float(max(Temp)) - float(min(Temp)) != 0:
-            Means.append( (float(TempSum) - float(min(Temp)) ) / ( float(max(Temp)) - float(min(Temp)) ) )
+            Means.append( (float(Means[0]) - float(min(Temp)) ) / ( float(max(Temp)) - float(min(Temp)) ) )
         else:
             Means.append( 0 )
         if float(max(Humi)) - float(min(Humi)) != 0:
-            Means.append( (float(HumiSum) - float(min(Humi)) ) / ( float(max(Humi)) - float(min(Humi)) ) )
+            Means.append( (float(Means[1]) - float(min(Humi)) ) / ( float(max(Humi)) - float(min(Humi)) ) )
         else:
             Means.append( 0 )
         if float(max(Wind)) - float(min(Wind)) != 0:
-            Means.append( (float(WindSum) - float(min(Wind)) ) / ( float(max(Wind)) - float(min(Wind)) ) )
+            Means.append( (float(Means[2]) - float(min(Wind)) ) / ( float(max(Wind)) - float(min(Wind)) ) )
         else:
             Means.append( 0 )
         if float(max(Rain)) - float(min(Rain)) != 0:
-            Means.append( (float(RainSum) - float(min(Rain)) ) / ( float(max(Rain)) - float(min(Rain)) ) )
+            Means.append( (float(Means[3]) - float(min(Rain)) ) / ( float(max(Rain)) - float(min(Rain)) ) )
         else:
             Means.append( 0 )
         if float(max(UV)) - float(min(UV)) != 0:
-            Means.append( (float(UVSum) - float(min(UV)) ) / ( float(max(UV)) - float(min(UV)) ) )
+            Means.append( (float(Means[4]) - float(min(UV)) ) / ( float(max(UV)) - float(min(UV)) ) )
         else:
             Means.append( 0 )
+        
         
         return Means
 
@@ -171,8 +169,6 @@ def runPrediction( trainFile , testFile ):
             
     for i in WeatherList:
         i.replace( '\n' , '' )
-        
-    print( WeatherList )
     
     
     # we now find the means for each of the weather pattern
@@ -195,60 +191,52 @@ def runPrediction( trainFile , testFile ):
     ColdRainyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-rainy\n' )
     ColdHumidMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'cold-humid\n' )
     
-    print( ColdWindyMeans )
-    
+    print(HotSunnyMeans[0])
     
     #Print out the Class Centroids
-    print( "Class Centroids(not normalized" )
-    print( "Weather\t\tTemp\tHumi\tWind\tRain\tUV" )
+    print( "Class Centroids(not normalized)" )
+    print( '{0:25} {1:16} {2:15} {3:15} {4:15} {5:20}'.format( "Weather", "Temp", "Humi", "Wind", "Rain", "UV" ) )
     # Hot
     if HotSunnyMeans != 0:
-        print( "hot-sunny\t", HotSunnyMeans[0], HotSunnyMeans[1], HotSunnyMeans[2], HotSunnyMeans[3], HotSunnyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format( "hot-sunny", HotSunnyMeans[0], HotSunnyMeans[1], HotSunnyMeans[2], HotSunnyMeans[3], HotSunnyMeans[4] ) )
     if HotWindyMeans != 0:
-        print( "hot-windy\t", HotWindyMeans[0], HotWindyMeans[1], HotWindyMeans[2], HotWindyMeans[3], HotWindyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("hot-windy", HotWindyMeans[0], HotWindyMeans[1], HotWindyMeans[2], HotWindyMeans[3], HotWindyMeans[4] ) )
     if HotOvercastMeans != 0:
-        print( "hot-overcast\t", HotOvercastMeans[0], HotOvercastMeans[1], HotOvercastMeans[2], HotOvercastMeans[3], HotOvercastMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("hot-overcast", HotOvercastMeans[0], HotOvercastMeans[1], HotOvercastMeans[2], HotOvercastMeans[3], HotOvercastMeans[4]) )
     if HotRainyMeans != 0:
-        print( "hot-rainy\t", HotRainyMeans[0], HotRainyMeans[1], HotRainyMeans[2], HotRainyMeans[3], HotRainyMeans[4], sep='\t' )
-    if HotSunnyMeans != 0:
-        print( "hot-humid\t", HotHumidMeans[0], HotHumidMeans[1], HotHumidMeans[2], HotHumidMeans[3], HotHumidMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("hot-rainy", HotRainyMeans[0], HotRainyMeans[1], HotRainyMeans[2], HotRainyMeans[3], HotRainyMeans[4] ) )
+    if HotHumidMeans != 0:
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("hot-humid", HotHumidMeans[0], HotHumidMeans[1], HotHumidMeans[2], HotHumidMeans[3], HotHumidMeans[4] ) )
     # Mild
     if MildSunnyMeans != 0:
-        print( "mild-sunny\t", MildSunnyMeans[0], MildSunnyMeans[1], MildSunnyMeans[2], MildSunnyMeans[3], MildSunnyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("mild-sunny", MildSunnyMeans[0], MildSunnyMeans[1], MildSunnyMeans[2], MildSunnyMeans[3], MildSunnyMeans[4]) )
     if MildWindyMeans != 0:
-        print( "mild-windy\t", MildWindyMeans[0], MildWindyMeans[1], MildWindyMeans[2], MildWindyMeans[3], MildWindyMeans[4], sep='\t' )
+        print( '{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("mild-windy", MildWindyMeans[0], MildWindyMeans[1], MildWindyMeans[2], MildWindyMeans[3], MildWindyMeans[4]) )
     if MildOvercastMeans != 0:
-        print( "mild-overcast\t", MildOvercastMeans[0], MildOvercastMeans[1], MildOvercastMeans[2], MildOvercastMeans[3], MildOvercastMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("mild-overcast",MildOvercastMeans[0], MildOvercastMeans[1], MildOvercastMeans[2], MildOvercastMeans[3], MildOvercastMeans[4]))
     if MildRainyMeans != 0:
-        print( "mild-rainy\t", MildRainyMeans[0], MildRainyMeans[1], MildRainyMeans[2], MildRainyMeans[3], MildRainyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("mild-rainy", MildRainyMeans[0], MildRainyMeans[1], MildRainyMeans[2], MildRainyMeans[3], MildRainyMeans[4]) )
     if MildHumidMeans != 0:
-        print( "mild-humid\t", MildHumidMeans[0], MildHumidMeans[1], MildHumidMeans[2], MildHumidMeans[3], MildHumidMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("mild-humid", MildHumidMeans[0], MildHumidMeans[1], MildHumidMeans[2], MildHumidMeans[3], MildHumidMeans[4]) )
     # Cold
     if ColdSunnyMeans != 0:
-        print( "cold-sunny\t", ColdSunnyMeans[0], ColdSunnyMeans[1], ColdSunnyMeans[2], ColdSunnyMeans[3], ColdSunnyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("cold-sunny",ColdSunnyMeans[0], ColdSunnyMeans[1], ColdSunnyMeans[2], ColdSunnyMeans[3], ColdSunnyMeans[4]) )
     if ColdWindyMeans != 0:
-        print( "cold-windy\t", ColdWindyMeans[0], ColdWindyMeans[1], ColdWindyMeans[2], ColdWindyMeans[3], ColdWindyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("cold-windy", ColdWindyMeans[0], ColdWindyMeans[1], ColdWindyMeans[2], ColdWindyMeans[3], ColdWindyMeans[4]) )
     if ColdOvercastMeans != 0:
-        print( "cold-overcast\t", ColdOvercastMeans[0], ColdOvercastMeans[1], ColdOvercastMeans[2], ColdOvercastMeans[3], ColdOvercastMeans[4] , sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("cold-overcast", ColdOvercastMeans[0], ColdOvercastMeans[1], ColdOvercastMeans[2], ColdOvercastMeans[3], ColdOvercastMeans[4]) )
     if ColdRainyMeans != 0:
-        print( "cold-rainy\t", ColdRainyMeans[0], ColdRainyMeans[1], ColdRainyMeans[2], ColdRainyMeans[3], ColdRainyMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("cold-rainy", ColdRainyMeans[0], ColdRainyMeans[1], ColdRainyMeans[2], ColdRainyMeans[3], ColdRainyMeans[4]) )
     if ColdHumidMeans != 0:
-        print( "cold-humid\t", ColdHumidMeans[0], ColdHumidMeans[1], ColdHumidMeans[2], ColdHumidMeans[3], ColdHumidMeans[4], sep='\t' )
+        print('{0:15} {1:15.2f} {2:15.2f} {3:15.2f} {4:15.2f} {5:15.2f}'.format("cold-humid", ColdHumidMeans[0], ColdHumidMeans[1], ColdHumidMeans[2], ColdHumidMeans[3], ColdHumidMeans[4]) )
         
     print( '\n' )
 
     
     Total = 0
     Right = 0
-    TestDate = []
-    TestTemp = []
-    TestHumi = []
-    TestWind = []
-    TestRain = []
-    TestUV = []
+    TestData = [[],[],[],[],[],[]]
     TestWeather = []
-    
-    j = 0
 
     # Read in each line of the test file and run the prediction on it
     for line in testFile:
@@ -265,45 +253,139 @@ def runPrediction( trainFile , testFile ):
             # 1st string will be the date,
             while elements[i] == '':
                 i += 1
-            TestDate[j] = elements[i]
+            TestData[0].append(elements[i])
             i += 1            
             # 2nd string we want is the Temp
             while elements[i] == '':
                 i += 1
-            TestTemp[j] = elements[i]
+            TestData[1].append(elements[i])
             i += 1
             # 3rd string we want is the Humidity
             while elements[i] == '':
                 i += 1
-            TestHumi[j] = elements[i]
+            TestData[2].append(elements[i])
             i += 1
             # 4th string we want is the Wind
             while elements[i] == '':
                 i += 1
-            TestWind[j] = elements[i]
+            TestData[3].append(elements[i])
             i += 1
             # 5th string we want is the Rain
             while elements[i] == '':
                 i += 1
-            TestRain[j] = elements[i]
+            TestData[4].append(elements[i]) 
             i += 1
             # 6th string we want is the UV index
             while elements[i] == '':
                 i += 1
-            TestUV[j] = elements[i]
+            TestData[5].append(elements[i])
             i += 1
             # last string we want is the weather desciption
             while elements[i] == '':
                 i += 1
-            TestWeather[j] = elements[i].rstrip(elements[-1:])
+            TestWeather.append(elements[i])
             Total += 1
-        else:
-            # first line printout
-            print( line , "\t\tPredicted" )
-        j += 1
-        
+            
+        # increment the total number of test data
+        Total += 1
     
-
+    # printout titles for this section
+    print( '{0:25} {1:16} {2:15} {3:15} {4:15} {5:15} {6:20} {7:20}'.format("Date" , "Temp", "Humi", "Wind", "Rain", "UV" , "Weather" , "Predicted" ) )
+    
+    #Compute perdiction and output for each of the inputs
+    i = 0
+    for WeatherIncr in TestWeather:
+        # Calculate Norms for test Data
+        TestTempNorm = ( float(TestData[1][i]) - float(min(TestData[1])) ) / ( float(max(TestData[1])) - float(min(TestData[1])) ) 
+        TestHumiNorm = ( float(TestData[2][i]) - float(min(TestData[2])) ) / ( float(max(TestData[2])) - float(min(TestData[2])) ) 
+        TestWindNorm = ( float(TestData[3][i]) - float(min(TestData[3])) ) / ( float(max(TestData[3])) - float(min(TestData[3])) )  
+        TestRainNorm = ( float(TestData[4][i]) - float(min(TestData[4])) ) / ( float(max(TestData[4])) - float(min(TestData[4])) )  
+        TestUVNorm = ( float(TestData[5][i]) - float(min(TestData[5])) ) / ( float(max(TestData[5])) - float(min(TestData[5])) )  
+        
+        # Find the best minimum distance classifier
+        if HotSunnyMeans != 0:
+            bestdist = math.sqrt( (HotSunnyMeans[5] - TestTempNorm)**2 + (HotSunnyMeans[6] - TestHumiNorm)**2 + (HotSunnyMeans[7] - TestWindNorm )**2 + (HotSunnyMeans[8] - TestRainNorm )**2 + (HotSunnyMeans[9] - TestUVNorm)**2 )
+            bestMatch = "hot-sunny\n"            
+        if HotWindyMeans != 0:
+            dist = math.sqrt( (HotWindyMeans[5] - TestTempNorm)**2 + (HotWindyMeans[6] - TestHumiNorm)**2 + (HotWindyMeans[7] - TestWindNorm )**2 + (HotWindyMeans[8] - TestRainNorm )**2 + (HotWindyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "hot-windy\n"
+        if HotOvercastMeans != 0:
+            dist = math.sqrt( (HotOvercastMeans[5] - TestTempNorm)**2 + (HotOvercastMeans[6] - TestHumiNorm)**2 + (HotOvercastMeans[7] - TestWindNorm )**2 + (HotOvercastMeans[8] - TestRainNorm )**2 + (HotOvercastMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "hot-overcast\n"
+        if HotRainyMeans != 0:
+            dist = math.sqrt( (HotRainyMeans[5] - TestTempNorm)**2 + (HotRainyMeans[6] - TestHumiNorm)**2 + (HotRainyMeans[7] - TestWindNorm )**2 + (HotRainyMeans[8] - TestRainNorm )**2 + (HotRainyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "hot-rainy\n"
+        if HotHumidMeans != 0:
+            dist = math.sqrt( (HotHumidMeans[5] - TestTempNorm)**2 + (HotHumidMeans[6] - TestHumiNorm)**2 + (HotHumidMeans[7] - TestWindNorm )**2 + (HotHumidMeans[8] - TestRainNorm )**2 + (HotHumidMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "hot-humid\n"
+        if MildSunnyMeans != 0:
+            dist = math.sqrt( (MildSunnyMeans[5] - TestTempNorm)**2 + (MildSunnyMeans[6] - TestHumiNorm)**2 + (MildSunnyMeans[7] - TestWindNorm )**2 + (MildSunnyMeans[8] - TestRainNorm )**2 + (MildSunnyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "mild-sunny\n"
+        if MildWindyMeans != 0:
+            dist = math.sqrt( (MildWindyMeans[5] - TestTempNorm)**2 + (MildWindyMeans[6] - TestHumiNorm)**2 + (MildWindyMeans[7] - TestWindNorm )**2 + (MildWindyMeans[8] - TestRainNorm )**2 + (MildWindyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "mild-windy\n"
+        if MildOvercastMeans != 0:
+            dist = math.sqrt( (MildOvercastMeans[5] - TestTempNorm)**2 + (MildOvercastMeans[6] - TestHumiNorm)**2 + (MildOvercastMeans[7] - TestWindNorm )**2 + (MildOvercastMeans[8] - TestRainNorm )**2 + (MildOvercastMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "mild-overcast\n"
+        if MildRainyMeans != 0:
+            dist = math.sqrt( (MildRainyMeans[5] - TestTempNorm)**2 + (MildRainyMeans[6] - TestHumiNorm)**2 + (MildRainyMeans[7] - TestWindNorm )**2 + (MildRainyMeans[8] - TestRainNorm )**2 + (MildRainyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "mild-rainy\n"
+        if MildHumidMeans != 0:
+            dist = math.sqrt( (MildHumidMeans[5] - TestTempNorm)**2 + (MildHumidMeans[6] - TestHumiNorm)**2 + (MildHumidMeans[7] - TestWindNorm )**2 + (MildHumidMeans[8] - TestRainNorm )**2 + (MildHumidMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "mild-humid\n"
+        if ColdSunnyMeans != 0:
+            dist = math.sqrt( (ColdSunnyMeans[5] - TestTempNorm)**2 + (ColdSunnyMeans[6] - TestHumiNorm)**2 + (ColdSunnyMeans[7] - TestWindNorm )**2 + (ColdSunnyMeans[8] - TestRainNorm )**2 + (ColdSunnyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "cold-sunny\n"
+        if ColdWindyMeans != 0:
+            dist = math.sqrt( (ColdWindyMeans[5] - TestTempNorm)**2 + (ColdWindyMeans[6] - TestHumiNorm)**2 + (ColdWindyMeans[7] - TestWindNorm )**2 + (ColdWindyMeans[8] - TestRainNorm )**2 + (ColdWindyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "cold-windy\n"
+        if ColdOvercastMeans != 0:
+            dist = math.sqrt( (ColdOvercastMeans[5] - TestTempNorm)**2 + (ColdOvercastMeans[6] - TestHumiNorm)**2 + (ColdOvercastMeans[7] - TestWindNorm )**2 + (ColdOvercastMeans[8] - TestRainNorm )**2 + (ColdOvercastMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "cold-overcast\n"
+        if ColdRainyMeans != 0:
+            dist = math.sqrt( (ColdRainyMeans[5] - TestTempNorm)**2 + (ColdRainyMeans[6] - TestHumiNorm)**2 + (ColdRainyMeans[7] - TestWindNorm )**2 + (ColdRainyMeans[8] - TestRainNorm )**2 + (ColdRainyMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "cold-rainy\n"
+        if ColdHumidMeans != 0:
+            dist = math.sqrt( (ColdHumidMeans[5] - TestTempNorm)**2 + (ColdHumidMeans[6] - TestHumiNorm)**2 + (ColdHumidMeans[7] - TestWindNorm )**2 + (ColdHumidMeans[8] - TestRainNorm )**2 + (ColdHumidMeans[9] - TestUVNorm)**2 )
+            if dist < bestdist:
+                bestdist = dist
+                bestMatch = "cold-humid\n"
+        
+        # We have the prediction, print out the info and check if we are right
+        print('{0:15} {1:15} {2:15} {3:15} {4:15} {5:15} {6:20} {7:20}'.format( TestData[0][i] , TestData[1][i] , TestData[2][i] , TestData[3][i] , TestData[4][i] , TestData[5][i] , TestWeather[i][:-1] , bestMatch[:-1] ) )
+        if bestMatch == TestWeather:
+            Right += 1
+        # incramenter
+        i += 1
+        
+    # print out results
+    print( "weaterPredictions: ", ( Right / Total ) * 100 , "% correct", sep='')
     
 
     
