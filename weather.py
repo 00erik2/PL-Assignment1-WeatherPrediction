@@ -48,7 +48,7 @@ def calculateMeans( TempList , HumiList , WindList , RainList , UVList , Weather
         i += 1
     
     # We now have all of the needed values
-    # Compute the Mean of each value and return them
+    # Compute the Mean of each value, then the norms and return them
     
     TempSum = 0
     HumiSum = 0
@@ -156,7 +156,7 @@ def runPrediction( trainFile , testFile ):
         i.replace( '\n' , '' )
     
     
-    # we now find the means for each of the weather pattern
+    # we now find the means (normalized and not) for each of the weather patterns
     # Hot
     HotSunnyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-sunny\n' )
     HotWindyMeans = calculateMeans( TempList , HumiList , WindList , RainList , UVList , WeatherList , 'hot-windy\n' )
@@ -178,7 +178,7 @@ def runPrediction( trainFile , testFile ):
     
     print(HotSunnyMeans[0])
     
-    #Print out the Class Centroids
+    #Print out the Class Centroids in a nice format
     print( "Class Centroids(not normalized)" )
     print( '{0:25} {1:16} {2:15} {3:15} {4:15} {5:20}'.format( "Weather", "Temp", "Humi", "Wind", "Rain", "UV" ) )
     # Hot
@@ -217,7 +217,7 @@ def runPrediction( trainFile , testFile ):
         
     print( '\n' )
 
-    
+    # initalize these varables to a begining state
     Total = 0
     Right = 0
     TestData = [[],[],[],[],[],[]]
